@@ -1,58 +1,225 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Courier & Logistics Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful Courier and Logistics Management System built with Laravel, MySQL, and Laravel Sanctum.
 
-## About Laravel
+This project demonstrates backend API development skills including:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* REST API development
+* Laravel Eloquent ORM
+* MySQL database design
+* CRUD operations
+* API validation
+* Route management
+* Authentication setup with Sanctum
+* MVC architecture
+* Git and GitHub workflow
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# Tech Stack
 
-## Learning Laravel
+## Backend
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* PHP 8+
+* Laravel 12
+* MySQL
+* Laravel Sanctum
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tools
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+* Git
+* GitHub
+* Postman / Thunder Client
+* Composer
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+# Features
+
+## Authentication
+
+* Laravel Sanctum API setup
+* User authentication support
+
+## Parcel Management
+
+* Create parcel
+* View all parcels
+* View single parcel
+* Update parcel
+* Delete parcel
+
+## Parcel Information
+
+* Tracking number generation
+* Sender details
+* Receiver details
+* Pickup and delivery addresses
+* Parcel description
+* Parcel weight
+* Delivery status tracking
+
+## Delivery Statuses
+
+* Pending
+* Collected
+* In Transit
+* Delivered
+* Cancelled
+
+---
+
+# Database Structure
+
+## Parcels Table
+
+| Column             | Description                   |
+| ------------------ | ----------------------------- |
+| id                 | Primary key                   |
+| tracking_number    | Unique parcel tracking number |
+| sender_name        | Sender full name              |
+| sender_phone       | Sender contact number         |
+| receiver_name      | Receiver full name            |
+| receiver_phone     | Receiver contact number       |
+| pickup_address     | Pickup location               |
+| delivery_address   | Delivery location             |
+| parcel_description | Parcel contents               |
+| weight             | Parcel weight                 |
+| status             | Delivery status               |
+| user_id            | Parcel owner                  |
+| created_at         | Created timestamp             |
+| updated_at         | Updated timestamp             |
+
+---
+
+# API Endpoints
+
+| Method    | Endpoint          | Description       |
+| --------- | ----------------- | ----------------- |
+| GET       | /api/parcels      | Get all parcels   |
+| POST      | /api/parcels      | Create parcel     |
+| GET       | /api/parcels/{id} | Get single parcel |
+| PUT/PATCH | /api/parcels/{id} | Update parcel     |
+| DELETE    | /api/parcels/{id} | Delete parcel     |
+
+---
+
+# Installation
+
+## Clone Repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/YOUR_USERNAME/courier-logistics-api.git
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Enter Project Folder
 
-## Contributing
+```bash
+cd courier-logistics-api
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Install Dependencies
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Copy Environment File
 
-## Security Vulnerabilities
+```bash
+copy .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Generate Application Key
 
-## License
+```bash
+php artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Configure Database
+
+Update `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=courier_logistics
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## Run Migrations
+
+```bash
+php artisan migrate
+```
+
+## Start Development Server
+
+```bash
+php artisan serve
+```
+
+---
+
+# Example API Request
+
+## Create Parcel
+
+### POST
+
+```text
+/api/parcels
+```
+
+### Request Body
+
+```json
+{
+  "sender_name": "Pilato",
+  "sender_phone": "0794166452",
+  "receiver_name": "John Doe",
+  "receiver_phone": "0812345678",
+  "pickup_address": "Tembisa, Gauteng",
+  "delivery_address": "Sandton, Johannesburg",
+  "parcel_description": "Documents",
+  "weight": 2.5,
+  "status": "pending"
+}
+```
+
+---
+
+# Architecture
+
+This project follows Laravel's MVC architecture:
+
+* Models manage database interaction
+* Controllers handle business logic
+* Routes define API endpoints
+* Migrations manage database schema
+* Eloquent ORM handles database operations
+
+---
+
+# Future Improvements
+
+* JWT/Sanctum authentication
+* Driver management
+* Real-time parcel tracking
+* Notifications
+* Admin dashboard
+* Vue.js frontend
+* Role-based permissions
+* Reporting and analytics
+
+---
+
+# Author
+
+Pilato Mmatshipyane
+
+* Full Stack Developer
+* Backend Developer
+* Laravel & API Development
