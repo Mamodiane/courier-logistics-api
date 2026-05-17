@@ -15,8 +15,8 @@ class ParcelController extends Controller
     public function index(Request $request)
     {
         $parcels = Parcel::where('user_id', $request->user()->id)
-            ->latest()
-            ->get();
+        ->latest()
+        ->paginate(6);
 
         return ParcelResource::collection($parcels);
     }
