@@ -6,72 +6,72 @@ use App\Http\Controllers\Controller;
 use App\Models\Parcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Requests\StoreParcelRequest;
+use App\Http\Requests\UpdateParcelRequest;
+use App\Http\Resources\ParcelResource;
 
 class ParcelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Parcel::latest()->get());
+        $parcels = Parcel::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        return ParcelResource::collection($parcels);
     }
 
-    public function store(Request $request)
+    public function store(StoreParcelRequest $request)
     {
-        $validated = $request->validate([
-            'sender_name' => 'required|string|max:255',
-            'sender_phone' => 'required|string|max:20',
-            'receiver_name' => 'required|string|max:255',
-            'receiver_phone' => 'required|string|max:20',
-            'pickup_address' => 'required|string',
-            'delivery_address' => 'required|string',
-            'parcel_description' => 'nullable|string',
-            'weight' => 'nullable|numeric|min:0',
-            'status' => 'nullable|in:pending,collected,in_transit,delivered,cancelled',
-        ]);
+        $validated = $request->validated();
 
         $validated['tracking_number'] = 'TRK-' . strtoupper(Str::random(8));
-        $validated['user_id'] = 1;
+        $validated['user_id'] = $request->user()->id;
 
         $parcel = Parcel::create($validated);
 
         return response()->json([
             'message' => 'Parcel created successfully',
-            'data' => $parcel
+            'data' => new ParcelResource($parcel)
         ], 201);
     }
 
-    public function show(Parcel $parcel)
+    public function show(Request $request, Parcel $parcel)
     {
-        return response()->json($parcel);
+        $this->authorizeParcelOwner($parcel, $request);
+
+        return new ParcelResource($parcel);
     }
 
-    public function update(Request $request, Parcel $parcel)
+    public function update(UpdateParcelRequest $request, Parcel $parcel)
     {
-        $validated = $request->validate([
-            'sender_name' => 'sometimes|string|max:255',
-            'sender_phone' => 'sometimes|string|max:20',
-            'receiver_name' => 'sometimes|string|max:255',
-            'receiver_phone' => 'sometimes|string|max:20',
-            'pickup_address' => 'sometimes|string',
-            'delivery_address' => 'sometimes|string',
-            'parcel_description' => 'nullable|string',
-            'weight' => 'nullable|numeric|min:0',
-            'status' => 'sometimes|in:pending,collected,in_transit,delivered,cancelled',
-        ]);
+        $this->authorizeParcelOwner($parcel, $request);
+
+        $validated = $request->validated();
 
         $parcel->update($validated);
 
         return response()->json([
             'message' => 'Parcel updated successfully',
-            'data' => $parcel
+            'data' => new ParcelResource($parcel)
         ]);
     }
 
-    public function destroy(Parcel $parcel)
+    public function destroy(Request $request, Parcel $parcel)
     {
+        $this->authorizeParcelOwner($parcel, $request);
+
         $parcel->delete();
 
         return response()->json([
             'message' => 'Parcel deleted successfully'
         ]);
+    }
+
+    private function authorizeParcelOwner(Parcel $parcel, Request $request): void
+    {
+        if ($parcel->user_id !== $request->user()->id) {
+            abort(403, 'You are not allowed to access this parcel.');
+        }
     }
 }
